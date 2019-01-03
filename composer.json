@@ -1,0 +1,36 @@
+{
+    "name": "railken/amethyst-aggregator",
+    "type": "library",
+    "keywords": ["laravel", "amethyst", "amethyst-aggregator", "aggregator"],
+    "license": "MIT",
+    "require": {
+        "php": ">=7.1",
+        "railken/amethyst-common": "0.1.*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~7.0",
+        "orchestra/testbench": "3.6.*",
+        "railken/amethyst-foo": "^0.1.0"
+    },
+    "autoload": {
+        "psr-4" : {
+            "Railken\\Amethyst\\" : "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": { 
+            "Railken\\Amethyst\\Tests\\": "tests/" 
+        }
+    },
+    "extra": {
+        "amethyst": {
+            "package": "aggregator",
+            "namespace": "Railken\\Amethyst"
+        },
+        "laravel": {
+            "providers": [
+                "Railken\\Amethyst\\Providers\\AggregatorServiceProvider"
+            ]
+        }
+    }
+}
