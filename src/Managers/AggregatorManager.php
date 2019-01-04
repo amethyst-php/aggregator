@@ -2,12 +2,12 @@
 
 namespace Railken\Amethyst\Managers;
 
+use Closure;
+use Illuminate\Support\Collection;
 use Railken\Amethyst\Common\ConfigurableManager;
+use Railken\Bag;
 use Railken\Lem\Manager;
 use Railken\Lem\Result;
-use Illuminate\Support\Collection;
-use Railken\Bag;
-use Closure;
 
 class AggregatorManager extends Manager
 {
@@ -18,120 +18,113 @@ class AggregatorManager extends Manager
      */
     protected $config = 'amethyst.aggregator.data.aggregator';
 
-
     /**
-     * Aggregate multiple entities to one final entity
+     * Aggregate multiple entities to one final entity.
      *
-     * @param array $sources
-     * @param array $weight
+     * @param array   $sources
+     * @param array   $weight
      * @param Closure $onCreate
      *
      * @return Result
      */
     public function createAggregate(array $sources, array $weights = null, Closure $onCreate)
     {
-    	if ($weights === null) {
-    		$weights = array_fill(0, count($sources), 1);
-    	}
+        if ($weights === null) {
+            $weights = array_fill(0, count($sources), 1);
+        }
 
-    	if (count($sources) !== count($weights)) {
-    		throw new \InvalidArgumentException(sprintf("Mismatch count() array between sources(%s) and weights(%s)", count($sources), count($weights)));
-    	}
+        if (count($sources) !== count($weights)) {
+            throw new \InvalidArgumentException(sprintf('Mismatch count() array between sources(%s) and weights(%s)', count($sources), count($weights)));
+        }
 
-   		$fields = $this->getAggregateAttributes($sources, $weights);
-   		$result = $onCreate($fields);
+        $fields = $this->getAggregateAttributes($sources, $weights);
+        $result = $onCreate($fields);
 
-   		if (!$result instanceof Result) {
-    		throw new \InvalidArgumentException(sprintf("Third parameter \$onCreate should return an instance of %s", get_class(Result::class)));
-   		}
+        if (!$result instanceof Result) {
+            throw new \InvalidArgumentException(sprintf('Third parameter $onCreate should return an instance of %s', get_class(Result::class)));
+        }
 
-   		if ($result->ok()) {
+        if ($result->ok()) {
+            foreach ($sources as $key => $source) {
+                $params = [
+                    'source_type'    => get_class($source),
+                    'source_id'      => $source->id,
+                    'weight'         => $weights[$key],
+                    'aggregate_type' => get_class($result->getResource()),
+                    'aggregate_id'   => $result->getResource()->id,
+                ];
+                $resultAggregatorCreate = $this->createOrFail($params);
 
-    		foreach ($sources as $key => $source) {
-    			$params = [
-	    			'source_type' => get_class($source),
-	    			'source_id' => $source->id,
-	    			'weight' => $weights[$key],
-	    			'aggregate_type' => get_class($result->getResource()),
-	    			'aggregate_id' => $result->getResource()->id
-	    		];
-	    		$resultAggregatorCreate = $this->createOrFail($params);
+                $result->addErrors($resultAggregatorCreate->getErrors());
+            }
+        }
 
-	    		$result->addErrors($resultAggregatorCreate->getErrors());
-	    	}
-    	}
-
-    	return $result;
+        return $result;
     }
 
-
     /**
-     * Aggregate multiple entities to one final entity
+     * Aggregate multiple entities to one final entity.
      *
-     * @param array $sources
+     * @param array   $sources
      * @param Closure $onRemove
      *
      * @return Result
      */
     public function removeAggregate(array $sources, Closure $onRemove)
     {
-    	$sources = Collection::make($sources);
+        $sources = Collection::make($sources);
 
-    	$q = $this->getRepository()->newQuery();
-    	
-    	$q->where(function ($q) use ($sources) {
-	    	foreach ($sources as $source) {
-	    		$q->orWhere(function($q) use ($source) {
-	    			$q->where('source_type', get_class($source));
-	    			$q->where('source_id', $source->id);
-	    		});
-	    	}
-	    });
+        $q = $this->getRepository()->newQuery();
 
-	    $q->get()->map(function($aggregator) {
-	    	$aggregator->aggregate()->delete();
-	    	$aggregator->delete();
-	    });
+        $q->where(function ($q) use ($sources) {
+            foreach ($sources as $source) {
+                $q->orWhere(function ($q) use ($source) {
+                    $q->where('source_type', get_class($source));
+                    $q->where('source_id', $source->id);
+                });
+            }
+        });
 
-    	return new Result();
+        $q->get()->map(function ($aggregator) {
+            $aggregator->aggregate()->delete();
+            $aggregator->delete();
+        });
+
+        return new Result();
     }
+
     public function getAggregateAttributes(array $sources, array $weights): Collection
     {
-    	$fields = Collection::make();
+        $fields = Collection::make();
 
-    	$fieldsName = array_keys($sources[0]->getAttributes());
+        $fieldsName = array_keys($sources[0]->getAttributes());
 
-    	foreach ($fieldsName as $fieldName) {
+        foreach ($fieldsName as $fieldName) {
+            $score = Collection::make();
 
-    		$score = Collection::make();
+            foreach ($sources as $key => $source) {
+                $value = $source->$fieldName;
+                $weight = (int) $weights[$key];
 
-    		foreach ($sources as $key => $source) {
-  					
-  				$value = $source->$fieldName;
-  				$weight = (int) $weights[$key];
+                $fieldScore = (new Bag())->set('score', $weight)->set('value', $value);
 
-  				$fieldScore = (new Bag())->set('score', $weight)->set('value', $value);
+                $found = $score->first(function ($item) use ($value) {
+                    // Strict comparison
+                    return $item->get('value') === $value;
+                });
 
-  				$found = $score->first(function($item) use ($value) {
+                if ($found) {
+                    $found->set('score', $found->get('score') + $weight);
+                } else {
+                    $score[] = $fieldScore;
+                }
+            }
 
-  					// Strict comparison
-  					return $item->get('value') === $value;
-  				});
+            $fields[$fieldName] = $score->sortByDesc(function ($item) {
+                return $item->get('score');
+            })->first()->get('value');
+        }
 
-  				if ($found) {
-  					$found->set('score', $found->get('score') + $weight);
-  				} else {
-  					$score[] = $fieldScore;
-  				}
-
-    		}
-
-    		$fields[$fieldName] = $score->sortByDesc(function($item) {
-    			return $item->get('score');
-    		})->first()->get('value');
-    	}
-
-    	return $fields;
-
+        return $fields;
     }
 }

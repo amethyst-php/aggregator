@@ -3,12 +3,11 @@
 namespace Railken\Amethyst\Tests\Managers;
 
 use Railken\Amethyst\Fakers\AggregatorFaker;
+use Railken\Amethyst\Fakers\FooFaker;
 use Railken\Amethyst\Managers\AggregatorManager;
+use Railken\Amethyst\Managers\FooManager;
 use Railken\Amethyst\Tests\BaseTest;
 use Railken\Lem\Support\Testing\TestableBaseTrait;
-use Railken\Amethyst\Managers\FooManager;
-use Railken\Amethyst\Models\Foo;
-use Railken\Amethyst\Fakers\FooFaker;
 
 class AggregatorTest extends BaseTest
 {
@@ -40,7 +39,7 @@ class AggregatorTest extends BaseTest
 
         $aggregatorManager = new AggregatorManager();
 
-        $onCreate = function($fields) use ($fooManager) {
+        $onCreate = function ($fields) use ($fooManager) {
             return $fooManager->create($fields);
         };
 
@@ -50,7 +49,7 @@ class AggregatorTest extends BaseTest
 
         $this->assertEquals('B', $aggregate->description);
 
-        $result = $aggregatorManager->removeAggregate([$foo1, $foo2, $foo3, $foo4, $foo5], function() {});
+        $result = $aggregatorManager->removeAggregate([$foo1, $foo2, $foo3, $foo4, $foo5], function () {});
 
         $this->assertEquals(null, $aggregatorManager->getRepository()->findOneBy(['aggregate_id' => $aggregate->id]));
         $this->assertEquals(null, $fooManager->getRepository()->findOneBy(['id' => $aggregate->id]));
