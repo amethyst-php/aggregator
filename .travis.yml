@@ -31,7 +31,7 @@ env:
 
 before_install:
   - composer clear-cache
-  - composer global require railken/cli-amethyst
+  - composer require --dev railken/cli-amethyst
   - composer require --dev phpstan/phpstan
 
 install:
