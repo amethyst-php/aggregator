@@ -49,7 +49,8 @@ class AggregatorTest extends BaseTest
 
         $this->assertEquals('B', $aggregate->description);
 
-        $result = $aggregatorManager->removeAggregate([$foo1, $foo2, $foo3, $foo4, $foo5], function () { });
+        $result = $aggregatorManager->removeAggregate([$foo1, $foo2, $foo3, $foo4, $foo5], function () {
+        });
 
         $this->assertEquals(null, $aggregatorManager->getRepository()->findOneBy(['aggregate_id' => $aggregate->id]));
         $this->assertEquals(null, $fooManager->getRepository()->findOneBy(['id' => $aggregate->id]));
