@@ -3,6 +3,8 @@
 namespace Railken\Amethyst\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Railken\Amethyst\Common\ConfigurableModel;
 use Railken\Lem\Contracts\EntityContract;
@@ -25,7 +27,7 @@ class Aggregator extends Model implements EntityContract
     /**
      * Get all of the owning raw models.
      */
-    public function source()
+    public function source(): MorphTo
     {
         return $this->morphTo();
     }
@@ -33,7 +35,7 @@ class Aggregator extends Model implements EntityContract
     /**
      * Get all of the owning raw models.
      */
-    public function aggregate()
+    public function aggregate(): MorphTo
     {
         return $this->morphTo();
     }
