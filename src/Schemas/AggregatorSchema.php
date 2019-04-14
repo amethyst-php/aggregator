@@ -2,7 +2,6 @@
 
 namespace Railken\Amethyst\Schemas;
 
-use Illuminate\Support\Facades\Config;
 use Railken\Lem\Attributes;
 use Railken\Lem\Schema;
 

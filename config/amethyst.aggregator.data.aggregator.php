@@ -10,5 +10,5 @@ return [
     'validator'  => Railken\Amethyst\Validators\AggregatorValidator::class,
     'authorizer' => Railken\Amethyst\Authorizers\AggregatorAuthorizer::class,
     'faker'      => Railken\Amethyst\Fakers\AggregatorFaker::class,
-    'manager'    => Railken\Amethyst\Managers\AggregatorManager::class
+    'manager'    => Railken\Amethyst\Managers\AggregatorManager::class,
 ];
