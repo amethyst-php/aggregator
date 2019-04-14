@@ -16,9 +16,9 @@ class AggregatorFaker extends Faker
         $faker = Factory::create();
 
         $bag = new Bag();
-        $bag->set('source_type', \Railken\Amethyst\Models\Foo::class);
+        $bag->set('source_type', 'foo');
         $bag->set('source', FooFaker::make()->parameters()->toArray());
-        $bag->set('aggregate_type', \Railken\Amethyst\Models\Foo::class);
+        $bag->set('aggregate_type', 'foo');
         $bag->set('aggregate', FooFaker::make()->parameters()->toArray());
 
         return $bag;
