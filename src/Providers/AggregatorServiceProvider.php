@@ -14,14 +14,14 @@ class AggregatorServiceProvider extends CommonServiceProvider
     {
         parent::register();
     }
-    
+
     /**
      * @inherit
      */
     public function boot()
     {
         parent::boot();
-        
+
         \Illuminate\Database\Eloquent\Builder::macro('aggregator_aggregates', function (): MorphMany {
             return app('amethyst')->createMacroMorphRelation($this, \Railken\Amethyst\Models\Aggregator::class, 'aggregator_aggregates', 'aggregate');
         });
