@@ -2,7 +2,6 @@
 
 namespace Railken\Amethyst\Providers;
 
-use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Railken\Amethyst\Common\CommonServiceProvider;
 
 class AggregatorServiceProvider extends CommonServiceProvider
