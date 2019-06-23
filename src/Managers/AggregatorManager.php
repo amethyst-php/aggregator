@@ -38,7 +38,7 @@ class AggregatorManager extends Manager
         }
 
         $fields = $this->getAggregateAttributes($sources, $weights);
-        
+
         $result = $onCreate($fields);
 
         if (!$result instanceof Result) {
