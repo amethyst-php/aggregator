@@ -38,6 +38,7 @@ class AggregatorManager extends Manager
         }
 
         $fields = $this->getAggregateAttributes($sources, $weights);
+        
         $result = $onCreate($fields);
 
         if (!$result instanceof Result) {
@@ -47,10 +48,10 @@ class AggregatorManager extends Manager
         if ($result->ok()) {
             foreach ($sources as $key => $source) {
                 $params = [
-                    'source_type'    => get_class($source),
+                    'source_type'    => $source->getMorphName(),
                     'source_id'      => $source->id,
                     'weight'         => $weights[$key],
-                    'aggregate_type' => get_class($result->getResource()),
+                    'aggregate_type' => $result->getResource()->getMorphName(),
                     'aggregate_id'   => $result->getResource()->id,
                 ];
                 $resultAggregatorCreate = $this->createOrFail($params);
@@ -79,7 +80,7 @@ class AggregatorManager extends Manager
         $q->where(function ($q) use ($sources) {
             foreach ($sources as $source) {
                 $q->orWhere(function ($q) use ($source) {
-                    $q->where('source_type', get_class($source));
+                    $q->where('source_type', $source->getMorphName());
                     $q->where('source_id', $source->id);
                 });
             }
