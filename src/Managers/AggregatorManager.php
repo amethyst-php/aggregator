@@ -22,7 +22,7 @@ class AggregatorManager extends Manager
      * Aggregate multiple entities to one final entity.
      *
      * @param array   $sources
-     * @param array   $weight
+     * @param array   $weights
      * @param Closure $onCreate
      *
      * @return Result
@@ -42,7 +42,7 @@ class AggregatorManager extends Manager
         $result = $onCreate($fields);
 
         if (!$result instanceof Result) {
-            throw new \InvalidArgumentException(sprintf('Third parameter $onCreate should return an instance of %s', get_class(Result::class)));
+            throw new \InvalidArgumentException(sprintf('Third parameter $onCreate should return an instance of %s', Result::class));
         }
 
         if ($result->ok()) {
