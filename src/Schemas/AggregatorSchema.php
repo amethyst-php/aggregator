@@ -1,6 +1,6 @@
 <?php
 
-namespace Railken\Amethyst\Schemas;
+namespace Amethyst\Schemas;
 
 use Railken\Lem\Attributes;
 use Railken\Lem\Schema;

@@ -1,10 +1,10 @@
 <?php
 
-namespace Railken\Amethyst\Managers;
+namespace Amethyst\Managers;
 
 use Closure;
 use Illuminate\Support\Collection;
-use Railken\Amethyst\Common\ConfigurableManager;
+use Amethyst\Common\ConfigurableManager;
 use Railken\Bag;
 use Railken\Lem\Manager;
 use Railken\Lem\Result;

@@ -1,11 +1,11 @@
 <?php
 
-namespace Railken\Amethyst\Models;
+namespace Amethyst\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Railken\Amethyst\Common\ConfigurableModel;
+use Amethyst\Common\ConfigurableModel;
 use Railken\Lem\Contracts\EntityContract;
 
 class Aggregator extends Model implements EntityContract
