@@ -2,9 +2,9 @@
 
 namespace Amethyst\Managers;
 
+use Amethyst\Common\ConfigurableManager;
 use Closure;
 use Illuminate\Support\Collection;
-use Amethyst\Common\ConfigurableManager;
 use Railken\Bag;
 use Railken\Lem\Manager;
 use Railken\Lem\Result;
