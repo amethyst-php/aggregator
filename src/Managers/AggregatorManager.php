@@ -56,10 +56,10 @@ class AggregatorManager extends Manager
         if ($result->ok()) {
             foreach ($sources as $key => $source) {
                 $params = [
-                    'source_type'    => $source->getMorphName(),
+                    'source_type'    => app('amethyst')->tableize($source),
                     'source_id'      => $source->id,
                     'weight'         => $weights[$key],
-                    'aggregate_type' => $result->getResource()->getMorphName(),
+                    'aggregate_type' => app('amethyst')->tableize($result->getResource()),
                     'aggregate_id'   => $result->getResource()->id,
                 ];
                 $resultAggregatorCreate = $this->createOrFail($params);
@@ -88,7 +88,7 @@ class AggregatorManager extends Manager
         $q->where(function ($q) use ($sources) {
             foreach ($sources as $source) {
                 $q->orWhere(function ($q) use ($source) {
-                    $q->where('source_type', $source->getMorphName());
+                    $q->where('source_type', app('amethyst')->tableize($source));
                     $q->where('source_id', $source->id);
                 });
             }
