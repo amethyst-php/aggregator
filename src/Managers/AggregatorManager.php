@@ -10,12 +10,12 @@ use Railken\Lem\Manager;
 use Railken\Lem\Result;
 
 /**
- * @method \Amethyst\Models\Aggregator newEntity()
- * @method \Amethyst\Schemas\AggregatorSchema getSchema()
+ * @method \Amethyst\Models\Aggregator                 newEntity()
+ * @method \Amethyst\Schemas\AggregatorSchema          getSchema()
  * @method \Amethyst\Repositories\AggregatorRepository getRepository()
- * @method \Amethyst\Serializers\AggregatorSerializer getSerializer()
- * @method \Amethyst\Validators\AggregatorValidator getValidator()
- * @method \Amethyst\Authorizers\AggregatorAuthorizer getAuthorizer()
+ * @method \Amethyst\Serializers\AggregatorSerializer  getSerializer()
+ * @method \Amethyst\Validators\AggregatorValidator    getValidator()
+ * @method \Amethyst\Authorizers\AggregatorAuthorizer  getAuthorizer()
  */
 class AggregatorManager extends Manager
 {
