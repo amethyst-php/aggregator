@@ -2,7 +2,7 @@
 
 namespace Amethyst\Managers;
 
-use Amethyst\Common\ConfigurableManager;
+use Amethyst\Core\ConfigurableManager;
 use Closure;
 use Illuminate\Support\Collection;
 use Railken\Bag;
