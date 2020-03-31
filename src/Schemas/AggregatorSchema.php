@@ -16,14 +16,14 @@ class AggregatorSchema extends Schema
     {
         return [
             Attributes\IdAttribute::make(),
-            Attributes\EnumAttribute::make('source_type', app('amethyst')->getDataNames())
+            \Amethyst\Core\Attributes\DataNameAttribute::make('source_type')
                 ->setRequired(true),
             Attributes\MorphToAttribute::make('source_id')
                 ->setRelationKey('source_type')
                 ->setRelationName('source')
                 ->setRelations(app('amethyst')->getDataManagers())
                 ->setRequired(true),
-            Attributes\EnumAttribute::make('aggregate_type', app('amethyst')->getDataNames())
+            \Amethyst\Core\Attributes\DataNameAttribute::make('aggregate_type')
                 ->setRequired(true),
             Attributes\MorphToAttribute::make('aggregate_id')
                 ->setRelationKey('aggregate_type')
